@@ -3,27 +3,11 @@
 
 #include "BaseCharacter.h"
 
+#include "BasePlayerState.h"
 #include "RPG_Game/BaseAttributeSet.h"
 #include "RPG_Game/BaseGameplayAbility.h"
 #include "RPG_Game/Components/BaseAbilitySystemComponent.h"
 
-ABaseCharacter::ABaseCharacter()
-{
-	AbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>("AbilitySystemComponent");
-	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-	
-	Attributes = CreateDefaultSubobject<UBaseAttributeSet>("Attributes");
-}
-
-ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
-{
-	AbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>("AbilitySystemComponent");
-	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-	
-	Attributes = CreateDefaultSubobject<UBaseAttributeSet>("Attributes");
-}
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
 {
@@ -64,24 +48,37 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	//Server GAS init
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	ABasePlayerState* PS = GetPlayerState<ABasePlayerState>();
+	if (PS)
+	{
+		AbilitySystemComponent = Cast<UBaseAbilitySystemComponent>(PS->GetAbilitySystemComponent());
 
-	InitializeAttributes();
-	GiveAbilities();
+		PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS, this);
+
+		InitializeAttributes();
+		GiveAbilities();
+	}
 }
 
 void ABaseCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
-	InitializeAttributes();
-
-	if (AbilitySystemComponent && InputComponent)
+	//Client GAS init
+	ABasePlayerState* PS = GetPlayerState<ABasePlayerState>();
+	if (PS)
 	{
-		const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EAbilityInputID", static_cast<int32>(EAbilityInputID::Confirm), static_cast<int32>(EAbilityInputID::Cancel));
-		AbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent, Binds);
+		AbilitySystemComponent = Cast<UBaseAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+
+		AbilitySystemComponent->InitAbilityActorInfo(PS, this);
+
+		InitializeAttributes();
+
+		if (AbilitySystemComponent && InputComponent)
+		{
+			const FGameplayAbilityInputBinds Binds("Confirm", "Cancel", "EAbilityInputID", static_cast<int32>(EAbilityInputID::Confirm), static_cast<int32>(EAbilityInputID::Cancel));
+			AbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent, Binds);
+		}
 	}
 }
 

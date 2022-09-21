@@ -23,8 +23,6 @@ class RPG_GAME_API ABaseCharacter : public AALSCharacter, public IAbilitySystemI
 	class UBaseAttributeSet* Attributes;
 
 public:
-	ABaseCharacter();
-	ABaseCharacter(const FObjectInitializer& ObjectInitializer);
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 

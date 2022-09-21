@@ -10,7 +10,8 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"GameplayAbilities",
-				"ALSV4_CPP"
+				"ALSV4_CPP",
+				"Engine"
 			]
 		}
 	],
