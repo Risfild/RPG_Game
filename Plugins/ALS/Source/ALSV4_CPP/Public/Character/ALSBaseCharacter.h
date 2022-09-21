@@ -32,6 +32,7 @@ class ALSV4_CPP_API AALSBaseCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	AALSBaseCharacter();
 	AALSBaseCharacter(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Movement")

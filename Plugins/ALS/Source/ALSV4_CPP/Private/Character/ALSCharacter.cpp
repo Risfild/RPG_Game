@@ -8,6 +8,20 @@
 #include "AI/ALSAIController.h"
 #include "Kismet/GameplayStatics.h"
 
+AALSCharacter::AALSCharacter()
+{
+	HeldObjectRoot = CreateDefaultSubobject<USceneComponent>(TEXT("HeldObjectRoot"));
+	HeldObjectRoot->SetupAttachment(GetMesh());
+
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	SkeletalMesh->SetupAttachment(HeldObjectRoot);
+
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	StaticMesh->SetupAttachment(HeldObjectRoot);
+
+	AIControllerClass = AALSAIController::StaticClass();
+}
+
 AALSCharacter::AALSCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
