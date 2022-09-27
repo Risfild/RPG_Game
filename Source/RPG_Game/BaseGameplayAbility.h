@@ -17,9 +17,14 @@ class RPG_GAME_API UBaseGameplayAbility : public UGameplayAbility
 
 public:
 
-	UBaseGameplayAbility();
+	UBaseGameplayAbility();	
 
 	//Abilities with this set will automatically activate when input is pressed
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 	EAbilityInputID AbilityInputID = EAbilityInputID::None;
+
+	//void ActivateEffectUI(UGameplayEffect* Effect);
+
+	virtual bool CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FGameplayTagContainer* OptionalRelevantTags) override;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 };

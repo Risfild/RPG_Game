@@ -22,7 +22,7 @@ void ABaseCharacter::InitializeAttributes()
 		EffectContext.AddSourceObject(this);
 
 		FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(DefaultAttributeEffect, 1, EffectContext);
-
+		
 		if (SpecHandle.IsValid())
 		{
 			FActiveGameplayEffectHandle GameplayEffectHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
